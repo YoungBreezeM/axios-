@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-01-24 11:42:58
- * @LastEditTime: 2021-01-26 11:23:49
+ * @LastEditTime: 2021-01-26 12:08:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /daka/index.js
  */
-var axios = require('axios');
-
+let axios = require('axios');
+const schedule = require('node-schedule');
 
 let { login } = require('./login');
 let { submit } = require('./daka');
@@ -24,7 +24,7 @@ let task = async function (item) {
       .then(response => {
         return response.data;
       })
-    console.log(item.username + " 打卡成功")
+    console.log(new Date() + " " + item.username + " 打卡成功")
     if (users.length > 0 && res.ok === true) {
       task(users.shift())
     }
@@ -33,10 +33,21 @@ let task = async function (item) {
 
 }
 
-if (users.length > 0) {
-  task(users.shift())
+
+
+
+
+const scheduleCronstyle = () => {
+  //每天1点打卡
+  console.log('自动打开已开启');
+  schedule.scheduleJob({ hour: 01, minute: 01 }, () => {
+    if (users.length > 0) {
+      task(users.shift())
+    }
+  });
 }
 
+scheduleCronstyle();
 
 
 
